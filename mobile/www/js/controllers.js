@@ -6,7 +6,7 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('ChatsCtrl', function($scope, Chats) { 
+.controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -29,4 +29,26 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
+})
+
+.controller('LoginCtrl', function($scope, $location, UserSession, $ionicPopup, $rootScope) {
+$scope.data = {};
+
+$scope.login = function() {
+  var user_session = new UserSession({ user: $scope.data });
+  user_session.$save(
+    function(data){
+      window.localStorage['userId'] = data.id;
+      window.localStorage['userName'] = data.name;
+      $location.path('/tab/dash');
+    },
+    function(err){
+      var error = err["data"]["error"] || err.data.join('. ')
+      var confirmPopup = $ionicPopup.alert({
+        title: 'An error occured',
+        template: error
+      });
+    }
+  );
+};
 });
